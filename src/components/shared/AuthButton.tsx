@@ -14,6 +14,7 @@ import {
 } from "../ui/tooltip";
 import { useConvexAuth } from "convex/react";
 import LoadingIcon from "../assets/svg/LoadingIcon";
+import { useEffect } from "react";
 
 const generateFallbackText = (text: string) => {
   return text
@@ -23,11 +24,15 @@ const generateFallbackText = (text: string) => {
 };
 
 const AuthButton = () => {
-  const userId = useStoreUserEffect();
+  const { addUserToDb } = useStoreUserEffect();
   const { loginWithPopup, logout, user } = useAuth0();
-  const { isLoading } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
 
-  if (userId) {
+  useEffect(() => {
+    addUserToDb();
+  }, [isAuthenticated, addUserToDb]);
+
+  if (user) {
     return (
       <TooltipProvider>
         <Tooltip>
